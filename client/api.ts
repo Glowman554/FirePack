@@ -4,10 +4,12 @@ import type { AppRouter } from '../backend/trpc/router.ts';
 import { Storage } from './storage.ts';
 import { z } from 'zod';
 
+const serverUrl = Deno.env.get('PACK_URL') || 'https://firepack.glowman554.de';
+
 export const api = createTRPCProxyClient<AppRouter>({
     links: [
         httpBatchLink({
-            url: `http://localhost:3000/trpc`,
+            url: `${serverUrl}/trpc`,
         }),
         ...(Deno.env.has('PACK_DEBUG') ? [loggerLink()] : []),
     ],

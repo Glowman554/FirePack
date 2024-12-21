@@ -20,13 +20,18 @@ async function main() {
     const keyPath = Deno.env.get('SERVER_KEY_PATH');
     const certPath = Deno.env.get('SERVER_CERT_PATH');
 
-    const options: Deno.ServeTcpOptions = {
+    let options: Deno.ServeTcpOptions | (Deno.ServeTcpOptions & Deno.TlsCertifiedKeyPem) = {
         port,
     };
 
     if (keyPath && certPath) {
-        options.key = await Deno.readTextFile(keyPath);
-        options.cert = await Deno.readTextFile(certPath);
+        options = {
+            ...options,
+            ...{
+                key: await Deno.readTextFile(keyPath),
+                cert: await Deno.readTextFile(certPath),
+            },
+        };
     }
 
     await Deno.serve(options, app.fetch);
