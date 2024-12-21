@@ -16,7 +16,20 @@ async function main() {
         }
     });
 
-    Deno.serve({ port: 3000 }, app.fetch);
+    const port = Number(Deno.env.get('PORT') || 3000);
+    const keyPath = Deno.env.get('SERVER_KEY_PATH');
+    const certPath = Deno.env.get('SERVER_CERT_PATH');
+
+    const options: Deno.ServeTcpOptions = {
+        port,
+    };
+
+    if (keyPath && certPath) {
+        options.key = await Deno.readTextFile(keyPath);
+        options.cert = await Deno.readTextFile(certPath);
+    }
+
+    await Deno.serve(options, app.fetch);
 }
 
 await main();
