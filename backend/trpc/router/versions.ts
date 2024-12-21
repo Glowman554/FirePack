@@ -1,37 +1,14 @@
 import { z } from 'zod';
 import { procedure, router } from '../utils.ts';
 import { projectAccess } from './projects.ts';
-import { config } from '../../config.ts';
 import { db } from '../../database/database.ts';
 import { Files, Versions } from '../../database/schema.ts';
 import { and, eq } from 'drizzle-orm';
+import { deleteFile, idFromUrl, prepareUpload, UploadResult } from '../../filething.ts';
 
 const token = z.string();
 const project = z.string();
 const version = z.string();
-
-interface UploadResult {
-    uploadToken: string;
-    id: string;
-    url: string;
-}
-
-async function prepareUpload(fileName: string) {
-    const res = await fetch(config.upload.uploadServer + '/api/v1/prepare', {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-            Authentication: config.upload.authToken,
-        },
-        body: JSON.stringify({ name: fileName }),
-    });
-    if (!res.ok) {
-        throw new Error('Failed to prepare upload');
-    }
-
-    const json = (await res.json()) as UploadResult;
-    return json;
-}
 
 export async function loadFileList(project: string, version: string) {
     const files = await db
@@ -66,4 +43,16 @@ export const versionsRouter = router({
 
             return files;
         }),
+
+    delete: procedure.input(z.object({ token, project, version })).mutation(async ({ input }) => {
+        await projectAccess(input.token, input.project);
+
+        const files = await loadFileList(input.project, input.version);
+
+        for (const f of files) {
+            await deleteFile(idFromUrl(f.url));
+        }
+
+        await db.delete(Versions).where(and(eq(Versions.version, input.version), eq(Versions.project, input.project)));
+    }),
 });

@@ -7,7 +7,7 @@ import { migrate } from 'drizzle-orm/libsql/migrator';
 import { config } from '../config.ts';
 
 export const client = createClient({ ...config.database });
-export const db = drizzle(client, { schema });
+export const db = drizzle(client, { schema, logger: true });
 
 await migrate(db, {
     migrationsFolder: './drizzle',

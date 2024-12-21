@@ -1,4 +1,5 @@
 import { BaseCommand } from './command.ts';
+import { DeleteCommand } from "./commands/delete.ts";
 import { DeployCommand } from './commands/deploy.ts';
 import { LoginCommand } from './commands/login.ts';
 import { RegisterCommand } from './commands/register.ts';
@@ -22,6 +23,7 @@ const commands: { [key: string]: { new (args: string[]): BaseCommand } } = {
     login: LoginCommand,
     register: RegisterCommand,
     deploy: DeployCommand,
+    delete: DeleteCommand,
 };
 
 async function main() {
