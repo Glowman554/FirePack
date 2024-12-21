@@ -5,7 +5,8 @@
         "db:push": "drizzle-kit push",
         "db:generate": "drizzle-kit generate",
         "db:migrate": "drizzle-kit migrate",
-        "build": "deno run -A build.ts"
+        "build:backend": "deno run -A build.backend.ts",
+        "build:client": "deno run -A build.client.ts"
     },
     "imports": {
         "@hono/trpc-server": "npm:@hono/trpc-server@^0.3.4",
