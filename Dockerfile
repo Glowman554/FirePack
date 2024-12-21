@@ -5,4 +5,4 @@ COPY . .
 
 RUN deno task build:backend
 
-ENTRYPOINT [ "deno", "run", "-A", "dist/backend.js" ]⏎   
+ENTRYPOINT [ "deno", "run", "-A", "dist/backend.js" ]
