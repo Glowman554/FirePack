@@ -4,7 +4,7 @@ import type { AppRouter } from '../backend/trpc/router.ts';
 import { Storage } from './storage.ts';
 import { z } from 'zod';
 
-const serverUrl = Deno.env.get('PACK_URL') || 'https://firepack.glowman554.de';
+const serverUrl = Deno.env.get('PACK_URL') || 'https://firepack.toxicfox.de';
 
 export const api = createTRPCProxyClient<AppRouter>({
     links: [
