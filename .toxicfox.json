@@ -1,0 +1,27 @@
+{
+    "build": [
+        {
+            "command": "sudo docker build -t glowman554/firepack .",
+            "directory": "{{service}}"
+        }
+    ],
+    "containers": [
+        {
+            "name": "firepack",
+            "image": "glowman554/firepack",
+            "environment": {
+                "SERVER_KEY_PATH": "/etc/letsencrypt/live/firepack.toxicfox.de/privkey.pem",
+                "SERVER_CERT_PATH": "/etc/letsencrypt/live/firepack.toxicfox.de/fullchain.pem",
+                "PORT": "443"
+            },
+            "mounts": {
+                "/etc/letsencrypt": "/etc/letsencrypt",
+                "{{base}}/data/FirePack/config.json": "/srv/config.json",
+                "{{base}}/data/FirePack/data.db": "/srv/data.db"
+            },
+            "networks": [
+                "router"
+            ]
+        }
+    ]
+}
